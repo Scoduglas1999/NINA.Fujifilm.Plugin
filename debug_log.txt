@@ -27821,3 +27821,310 @@ Adjusting width for safety: 7752 -> 7704
 [11/24/2025 16:56:22] FujiCameraFactory: DetectCamerasAsync returned 1 items
 [11/24/2025 16:56:22] FujiCameraProvider: Found 1 cameras
 [11/24/2025 16:56:22] FujiCameraProvider: Creating camera for X-T5
+[11/24/2025 16:58:58] FujiSettingsProvider Constructor called
+[11/24/2025 16:58:58] FujifilmDiagnosticsService Constructor called
+[11/24/2025 16:58:58] FujifilmInterop Constructor called. Hash: 15842375
+[11/24/2025 16:58:58] CameraModelCatalog Constructor called
+[11/24/2025 16:58:58] ResolveConfigDirectory: Assembly Location: 'C:\Users\scdou\AppData\Local\NINA\Plugins\3.0.0\Fujifilm\NINA.Plugins.Fujifilm.dll'
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Looking for configs in 'C:\Users\scdou\AppData\Local\NINA\Plugins\3.0.0\Fujifilm\Configuration\Assets\CameraConfigs'
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Found 13 JSON files
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for GFX100
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for GFX100S
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for GFX50R
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for GFX50S
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for X-H2
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for X-H2S
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for X-M5
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for X-Pro3
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for X-S20
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for X-T2
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for X-T3
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for X-T4
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for X-T5
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Total loaded: 13 configs. Keys: GFX100, GFX100S, GFX50R, GFX50S, X-H2, XH2, X-H2S, XH2S, X-M5, XM5, X-Pro3, XPro3, X-S20, XS20, X-T2, XT2, X-T3, XT3, X-T4, XT4, X-T5, XT5
+[11/24/2025 16:58:58] LibRawAdapter Constructor called
+[11/24/2025 16:58:58] FujiCameraFactory (DirectCamera) Constructor called
+[11/24/2025 16:58:58] FujiCameraFactory.GetAvailableCamerasAsync called
+[11/24/2025 16:58:58 -05:00] [Interop] Initializing Fujifilm SDK runtime
+[11/24/2025 16:58:58 -05:00] [Interop] Detecting Fujifilm cameras via USB
+[11/24/2025 16:58:58] FujiManifest Constructor called
+[11/24/2025 16:58:58] FujifilmDiagnosticsService Constructor called
+[11/24/2025 16:58:58] FujifilmInterop Constructor called. Hash: 59253207
+[11/24/2025 16:58:58] CameraModelCatalog Constructor called
+[11/24/2025 16:58:58] ResolveConfigDirectory: Assembly Location: 'C:\Users\scdou\AppData\Local\NINA\Plugins\3.0.0\Fujifilm\NINA.Plugins.Fujifilm.dll'
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Looking for configs in 'C:\Users\scdou\AppData\Local\NINA\Plugins\3.0.0\Fujifilm\Configuration\Assets\CameraConfigs'
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Found 13 JSON files
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for GFX100
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for GFX100S
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for GFX50R
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for GFX50S
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for X-H2
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for X-H2S
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for X-M5
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for X-Pro3
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for X-S20
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for X-T2
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for X-T3
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for X-T4
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Loaded config for X-T5
+[11/24/2025 16:58:58] CameraModelCatalog.Reload: Total loaded: 13 configs. Keys: GFX100, GFX100S, GFX50R, GFX50S, X-H2, XH2, X-H2S, XH2S, X-M5, XM5, X-Pro3, XPro3, X-S20, XS20, X-T2, XT2, X-T3, XT3, X-T4, XT4, X-T5, XT5
+[11/24/2025 16:58:58] FujiSettingsProvider Constructor called
+[11/24/2025 16:58:58] LibRawAdapter Constructor called
+[11/24/2025 16:58:58] FujiCameraFactory (DirectCamera) Constructor called
+[11/24/2025 16:58:58] FujiCameraProvider Constructor called
+[11/24/2025 16:58:58 -05:00] [Interop] SDK detected 1 camera(s)
+[11/24/2025 16:58:58 -05:00] [Interop] Opened camera handle 2184709874000 in mode 5 for detection
+[11/24/2025 16:58:58 -05:00] [Interop] Device info: Product='X-T5', Serial='593536383832230227F9C32031313F'
+[11/24/2025 16:58:58 -05:00] [Interop] Creating camera descriptor: DisplayName='X-T5', DeviceId='ENUM:0'
+[11/24/2025 16:58:58 -05:00] [Interop] Detection complete: 1 camera(s) successfully detected
+[11/24/2025 16:58:58] FujiCameraFactory: DetectCamerasAsync returned 1 items
+[11/24/2025 16:58:59] FujiCameraFactory.GetAvailableCamerasAsync called
+[11/24/2025 16:58:59 -05:00] [Interop] Detecting Fujifilm cameras via USB
+[11/24/2025 16:58:59] FujiCameraProvider.GetEquipment called
+[11/24/2025 16:58:59] FujiCameraFactory.GetAvailableCamerasAsync called
+[11/24/2025 16:58:59 -05:00] [Interop] SDK detected 1 camera(s)
+[11/24/2025 16:58:59 -05:00] [Interop] Opened camera handle 2184709874000 in mode 5 for detection
+[11/24/2025 16:58:59 -05:00] [Interop] Device info: Product='X-T5', Serial='593536383832230227F9C32031313F'
+[11/24/2025 16:58:59 -05:00] [Interop] Creating camera descriptor: DisplayName='X-T5', DeviceId='ENUM:0'
+[11/24/2025 16:58:59 -05:00] [Interop] Detection complete: 1 camera(s) successfully detected
+[11/24/2025 16:58:59] FujiCameraFactory: DetectCamerasAsync returned 1 items
+[11/24/2025 16:58:59 -05:00] [Interop] Detecting Fujifilm cameras via USB
+[11/24/2025 16:58:59 -05:00] [Focuser] Creating focuser for X-T5
+[11/24/2025 16:58:59 -05:00] [Interop] SDK detected 1 camera(s)
+[11/24/2025 16:58:59 -05:00] [Interop] Opened camera handle 2184709874000 in mode 5 for detection
+[11/24/2025 16:58:59 -05:00] [Interop] Device info: Product='X-T5', Serial='593536383832230227F9C32031313F'
+[11/24/2025 16:58:59 -05:00] [Interop] Creating camera descriptor: DisplayName='X-T5', DeviceId='ENUM:0'
+[11/24/2025 16:58:59 -05:00] [Interop] Detection complete: 1 camera(s) successfully detected
+[11/24/2025 16:58:59] FujiCameraFactory: DetectCamerasAsync returned 1 items
+[11/24/2025 16:58:59] FujiCameraProvider: Found 1 cameras
+[11/24/2025 16:58:59] FujiCameraProvider: Creating camera for X-T5
+[11/24/2025 17:01:13] FujiSettingsProvider Constructor called
+[11/24/2025 17:01:13] FujifilmDiagnosticsService Constructor called
+[11/24/2025 17:01:13] FujifilmInterop Constructor called. Hash: 3391368
+[11/24/2025 17:01:13] CameraModelCatalog Constructor called
+[11/24/2025 17:01:13] ResolveConfigDirectory: Assembly Location: 'C:\Users\scdou\AppData\Local\NINA\Plugins\3.0.0\Fujifilm\NINA.Plugins.Fujifilm.dll'
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Looking for configs in 'C:\Users\scdou\AppData\Local\NINA\Plugins\3.0.0\Fujifilm\Configuration\Assets\CameraConfigs'
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Found 13 JSON files
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for GFX100
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for GFX100S
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for GFX50R
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for GFX50S
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for X-H2
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for X-H2S
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for X-M5
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for X-Pro3
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for X-S20
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for X-T2
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for X-T3
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for X-T4
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for X-T5
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Total loaded: 13 configs. Keys: GFX100, GFX100S, GFX50R, GFX50S, X-H2, XH2, X-H2S, XH2S, X-M5, XM5, X-Pro3, XPro3, X-S20, XS20, X-T2, XT2, X-T3, XT3, X-T4, XT4, X-T5, XT5
+[11/24/2025 17:01:13] LibRawAdapter Constructor called
+[11/24/2025 17:01:13] FujiCameraFactory (DirectCamera) Constructor called
+[11/24/2025 17:01:13] FujiCameraFactory.GetAvailableCamerasAsync called
+[11/24/2025 17:01:13 -05:00] [Interop] Initializing Fujifilm SDK runtime
+[11/24/2025 17:01:13 -05:00] [Interop] Detecting Fujifilm cameras via USB
+[11/24/2025 17:01:13] FujiManifest Constructor called
+[11/24/2025 17:01:13] FujifilmDiagnosticsService Constructor called
+[11/24/2025 17:01:13] FujifilmInterop Constructor called. Hash: 2108667
+[11/24/2025 17:01:13] CameraModelCatalog Constructor called
+[11/24/2025 17:01:13] ResolveConfigDirectory: Assembly Location: 'C:\Users\scdou\AppData\Local\NINA\Plugins\3.0.0\Fujifilm\NINA.Plugins.Fujifilm.dll'
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Looking for configs in 'C:\Users\scdou\AppData\Local\NINA\Plugins\3.0.0\Fujifilm\Configuration\Assets\CameraConfigs'
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Found 13 JSON files
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for GFX100
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for GFX100S
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for GFX50R
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for GFX50S
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for X-H2
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for X-H2S
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for X-M5
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for X-Pro3
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for X-S20
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for X-T2
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for X-T3
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for X-T4
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Loaded config for X-T5
+[11/24/2025 17:01:13] CameraModelCatalog.Reload: Total loaded: 13 configs. Keys: GFX100, GFX100S, GFX50R, GFX50S, X-H2, XH2, X-H2S, XH2S, X-M5, XM5, X-Pro3, XPro3, X-S20, XS20, X-T2, XT2, X-T3, XT3, X-T4, XT4, X-T5, XT5
+[11/24/2025 17:01:13] FujiSettingsProvider Constructor called
+[11/24/2025 17:01:13] LibRawAdapter Constructor called
+[11/24/2025 17:01:13] FujiCameraFactory (DirectCamera) Constructor called
+[11/24/2025 17:01:13] FujiCameraProvider Constructor called
+[11/24/2025 17:01:13 -05:00] [Interop] SDK detected 1 camera(s)
+[11/24/2025 17:01:13 -05:00] [Interop] Opened camera handle 2341054980432 in mode 5 for detection
+[11/24/2025 17:01:13 -05:00] [Interop] Device info: Product='X-T5', Serial='593536383832230227F9C32031313F'
+[11/24/2025 17:01:13 -05:00] [Interop] Creating camera descriptor: DisplayName='X-T5', DeviceId='ENUM:0'
+[11/24/2025 17:01:13 -05:00] [Interop] Detection complete: 1 camera(s) successfully detected
+[11/24/2025 17:01:13] FujiCameraFactory: DetectCamerasAsync returned 1 items
+[11/24/2025 17:01:13] FujiCameraFactory.GetAvailableCamerasAsync called
+[11/24/2025 17:01:13 -05:00] [Interop] Detecting Fujifilm cameras via USB
+[11/24/2025 17:01:13] FujiCameraProvider.GetEquipment called
+[11/24/2025 17:01:13] FujiCameraFactory.GetAvailableCamerasAsync called
+[11/24/2025 17:01:14 -05:00] [Interop] SDK detected 1 camera(s)
+[11/24/2025 17:01:14 -05:00] [Interop] Opened camera handle 2341054980432 in mode 5 for detection
+[11/24/2025 17:01:14 -05:00] [Interop] Device info: Product='X-T5', Serial='593536383832230227F9C32031313F'
+[11/24/2025 17:01:14 -05:00] [Interop] Creating camera descriptor: DisplayName='X-T5', DeviceId='ENUM:0'
+[11/24/2025 17:01:14 -05:00] [Interop] Detection complete: 1 camera(s) successfully detected
+[11/24/2025 17:01:14] FujiCameraFactory: DetectCamerasAsync returned 1 items
+[11/24/2025 17:01:14 -05:00] [Focuser] Creating focuser for X-T5
+[11/24/2025 17:01:14 -05:00] [Interop] SDK detected 1 camera(s)
+[11/24/2025 17:01:14 -05:00] [Interop] Opened camera handle 2341054980432 in mode 5 for detection
+[11/24/2025 17:01:14 -05:00] [Interop] Device info: Product='X-T5', Serial='593536383832230227F9C32031313F'
+[11/24/2025 17:01:14 -05:00] [Interop] Creating camera descriptor: DisplayName='X-T5', DeviceId='ENUM:0'
+[11/24/2025 17:01:14 -05:00] [Interop] Detection complete: 1 camera(s) successfully detected
+[11/24/2025 17:01:14] FujiCameraFactory: DetectCamerasAsync returned 1 items
+[11/24/2025 17:01:14] FujiCameraProvider: Found 1 cameras
+[11/24/2025 17:01:14] FujiCameraProvider: Creating camera for X-T5
+[11/24/2025 17:03:25] FujiSettingsProvider Constructor called
+[11/24/2025 17:03:25] FujifilmDiagnosticsService Constructor called
+[11/24/2025 17:03:25] FujifilmInterop Constructor called. Hash: 58435526
+[11/24/2025 17:03:25] CameraModelCatalog Constructor called
+[11/24/2025 17:03:25] ResolveConfigDirectory: Assembly Location: 'C:\Users\scdou\AppData\Local\NINA\Plugins\3.0.0\Fujifilm\NINA.Plugins.Fujifilm.dll'
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Looking for configs in 'C:\Users\scdou\AppData\Local\NINA\Plugins\3.0.0\Fujifilm\Configuration\Assets\CameraConfigs'
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Found 13 JSON files
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for GFX100
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for GFX100S
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for GFX50R
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for GFX50S
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for X-H2
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for X-H2S
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for X-M5
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for X-Pro3
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for X-S20
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for X-T2
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for X-T3
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for X-T4
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for X-T5
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Total loaded: 13 configs. Keys: GFX100, GFX100S, GFX50R, GFX50S, X-H2, XH2, X-H2S, XH2S, X-M5, XM5, X-Pro3, XPro3, X-S20, XS20, X-T2, XT2, X-T3, XT3, X-T4, XT4, X-T5, XT5
+[11/24/2025 17:03:25] LibRawAdapter Constructor called
+[11/24/2025 17:03:25] FujiCameraFactory (DirectCamera) Constructor called
+[11/24/2025 17:03:25] FujiCameraFactory.GetAvailableCamerasAsync called
+[11/24/2025 17:03:25 -05:00] [Interop] Initializing Fujifilm SDK runtime
+[11/24/2025 17:03:25 -05:00] [Interop] Detecting Fujifilm cameras via USB
+[11/24/2025 17:03:25] FujiManifest Constructor called
+[11/24/2025 17:03:25] FujifilmDiagnosticsService Constructor called
+[11/24/2025 17:03:25] FujifilmInterop Constructor called. Hash: 33804145
+[11/24/2025 17:03:25] CameraModelCatalog Constructor called
+[11/24/2025 17:03:25] ResolveConfigDirectory: Assembly Location: 'C:\Users\scdou\AppData\Local\NINA\Plugins\3.0.0\Fujifilm\NINA.Plugins.Fujifilm.dll'
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Looking for configs in 'C:\Users\scdou\AppData\Local\NINA\Plugins\3.0.0\Fujifilm\Configuration\Assets\CameraConfigs'
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Found 13 JSON files
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for GFX100
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for GFX100S
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for GFX50R
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for GFX50S
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for X-H2
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for X-H2S
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for X-M5
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for X-Pro3
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for X-S20
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for X-T2
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for X-T3
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for X-T4
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Loaded config for X-T5
+[11/24/2025 17:03:25] CameraModelCatalog.Reload: Total loaded: 13 configs. Keys: GFX100, GFX100S, GFX50R, GFX50S, X-H2, XH2, X-H2S, XH2S, X-M5, XM5, X-Pro3, XPro3, X-S20, XS20, X-T2, XT2, X-T3, XT3, X-T4, XT4, X-T5, XT5
+[11/24/2025 17:03:25] FujiSettingsProvider Constructor called
+[11/24/2025 17:03:25] LibRawAdapter Constructor called
+[11/24/2025 17:03:25] FujiCameraFactory (DirectCamera) Constructor called
+[11/24/2025 17:03:25] FujiCameraProvider Constructor called
+[11/24/2025 17:03:26 -05:00] [Interop] SDK detected 1 camera(s)
+[11/24/2025 17:03:26 -05:00] [Interop] Opened camera handle 2124161229136 in mode 5 for detection
+[11/24/2025 17:03:26 -05:00] [Interop] Device info: Product='X-T5', Serial='593536383832230227F9C32031313F'
+[11/24/2025 17:03:26 -05:00] [Interop] Creating camera descriptor: DisplayName='X-T5', DeviceId='ENUM:0'
+[11/24/2025 17:03:26 -05:00] [Interop] Detection complete: 1 camera(s) successfully detected
+[11/24/2025 17:03:26] FujiCameraFactory: DetectCamerasAsync returned 1 items
+[11/24/2025 17:03:26] FujiCameraFactory.GetAvailableCamerasAsync called
+[11/24/2025 17:03:26 -05:00] [Interop] Detecting Fujifilm cameras via USB
+[11/24/2025 17:03:26] FujiCameraProvider.GetEquipment called
+[11/24/2025 17:03:26] FujiCameraFactory.GetAvailableCamerasAsync called
+[11/24/2025 17:03:26 -05:00] [Interop] SDK detected 1 camera(s)
+[11/24/2025 17:03:26 -05:00] [Interop] Opened camera handle 2124161229136 in mode 5 for detection
+[11/24/2025 17:03:27 -05:00] [Interop] Device info: Product='X-T5', Serial='593536383832230227F9C32031313F'
+[11/24/2025 17:03:27 -05:00] [Interop] Creating camera descriptor: DisplayName='X-T5', DeviceId='ENUM:0'
+[11/24/2025 17:03:27 -05:00] [Interop] Detection complete: 1 camera(s) successfully detected
+[11/24/2025 17:03:27] FujiCameraFactory: DetectCamerasAsync returned 1 items
+[11/24/2025 17:03:27 -05:00] [Interop] Detecting Fujifilm cameras via USB
+[11/24/2025 17:03:27 -05:00] [Focuser] Creating focuser for X-T5
+[11/24/2025 17:03:27 -05:00] [Interop] SDK detected 1 camera(s)
+[11/24/2025 17:03:27 -05:00] [Interop] Opened camera handle 2124161229136 in mode 5 for detection
+[11/24/2025 17:03:27 -05:00] [Interop] Device info: Product='X-T5', Serial='593536383832230227F9C32031313F'
+[11/24/2025 17:03:27 -05:00] [Interop] Creating camera descriptor: DisplayName='X-T5', DeviceId='ENUM:0'
+[11/24/2025 17:03:27 -05:00] [Interop] Detection complete: 1 camera(s) successfully detected
+[11/24/2025 17:03:27] FujiCameraFactory: DetectCamerasAsync returned 1 items
+[11/24/2025 17:03:27] FujiCameraProvider: Found 1 cameras
+[11/24/2025 17:03:27] FujiCameraProvider: Creating camera for X-T5
+[11/24/2025 17:03:43] FujiSettingsProvider Constructor called
+[11/24/2025 17:03:43] FujifilmDiagnosticsService Constructor called
+[11/24/2025 17:03:43] FujifilmInterop Constructor called. Hash: 53669732
+[11/24/2025 17:03:43] CameraModelCatalog Constructor called
+[11/24/2025 17:03:43] ResolveConfigDirectory: Assembly Location: 'C:\Users\scdou\AppData\Local\NINA\Plugins\3.0.0\Fujifilm\NINA.Plugins.Fujifilm.dll'
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Looking for configs in 'C:\Users\scdou\AppData\Local\NINA\Plugins\3.0.0\Fujifilm\Configuration\Assets\CameraConfigs'
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Found 13 JSON files
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for GFX100
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for GFX100S
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for GFX50R
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for GFX50S
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for X-H2
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for X-H2S
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for X-M5
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for X-Pro3
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for X-S20
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for X-T2
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for X-T3
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for X-T4
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for X-T5
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Total loaded: 13 configs. Keys: GFX100, GFX100S, GFX50R, GFX50S, X-H2, XH2, X-H2S, XH2S, X-M5, XM5, X-Pro3, XPro3, X-S20, XS20, X-T2, XT2, X-T3, XT3, X-T4, XT4, X-T5, XT5
+[11/24/2025 17:03:43] LibRawAdapter Constructor called
+[11/24/2025 17:03:43] FujiCameraFactory (DirectCamera) Constructor called
+[11/24/2025 17:03:43] FujiCameraFactory.GetAvailableCamerasAsync called
+[11/24/2025 17:03:43 -05:00] [Interop] Initializing Fujifilm SDK runtime
+[11/24/2025 17:03:43 -05:00] [Interop] Detecting Fujifilm cameras via USB
+[11/24/2025 17:03:43] FujiManifest Constructor called
+[11/24/2025 17:03:43] FujifilmDiagnosticsService Constructor called
+[11/24/2025 17:03:43] FujifilmInterop Constructor called. Hash: 62363111
+[11/24/2025 17:03:43] CameraModelCatalog Constructor called
+[11/24/2025 17:03:43] ResolveConfigDirectory: Assembly Location: 'C:\Users\scdou\AppData\Local\NINA\Plugins\3.0.0\Fujifilm\NINA.Plugins.Fujifilm.dll'
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Looking for configs in 'C:\Users\scdou\AppData\Local\NINA\Plugins\3.0.0\Fujifilm\Configuration\Assets\CameraConfigs'
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Found 13 JSON files
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for GFX100
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for GFX100S
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for GFX50R
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for GFX50S
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for X-H2
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for X-H2S
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for X-M5
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for X-Pro3
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for X-S20
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for X-T2
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for X-T3
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for X-T4
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Loaded config for X-T5
+[11/24/2025 17:03:43] CameraModelCatalog.Reload: Total loaded: 13 configs. Keys: GFX100, GFX100S, GFX50R, GFX50S, X-H2, XH2, X-H2S, XH2S, X-M5, XM5, X-Pro3, XPro3, X-S20, XS20, X-T2, XT2, X-T3, XT3, X-T4, XT4, X-T5, XT5
+[11/24/2025 17:03:43] FujiSettingsProvider Constructor called
+[11/24/2025 17:03:43] LibRawAdapter Constructor called
+[11/24/2025 17:03:43] FujiCameraFactory (DirectCamera) Constructor called
+[11/24/2025 17:03:43] FujiCameraProvider Constructor called
+[11/24/2025 17:03:43 -05:00] [Interop] SDK detected 1 camera(s)
+[11/24/2025 17:03:43 -05:00] [Interop] Opened camera handle 2684667961680 in mode 5 for detection
+[11/24/2025 17:03:43 -05:00] [Interop] Device info: Product='X-T5', Serial='593536383832230227F9C32031313F'
+[11/24/2025 17:03:43 -05:00] [Interop] Creating camera descriptor: DisplayName='X-T5', DeviceId='ENUM:0'
+[11/24/2025 17:03:43 -05:00] [Interop] Detection complete: 1 camera(s) successfully detected
+[11/24/2025 17:03:43] FujiCameraFactory: DetectCamerasAsync returned 1 items
+[11/24/2025 17:03:43] FujiCameraFactory.GetAvailableCamerasAsync called
+[11/24/2025 17:03:43 -05:00] [Interop] Detecting Fujifilm cameras via USB
+[11/24/2025 17:03:43] FujiCameraProvider.GetEquipment called
+[11/24/2025 17:03:43] FujiCameraFactory.GetAvailableCamerasAsync called
+[11/24/2025 17:03:43 -05:00] [Interop] SDK detected 1 camera(s)
+[11/24/2025 17:03:44 -05:00] [Interop] Opened camera handle 2684667961680 in mode 5 for detection
+[11/24/2025 17:03:44 -05:00] [Interop] Device info: Product='X-T5', Serial='593536383832230227F9C32031313F'
+[11/24/2025 17:03:44 -05:00] [Interop] Creating camera descriptor: DisplayName='X-T5', DeviceId='ENUM:0'
+[11/24/2025 17:03:44 -05:00] [Interop] Detection complete: 1 camera(s) successfully detected
+[11/24/2025 17:03:44] FujiCameraFactory: DetectCamerasAsync returned 1 items
+[11/24/2025 17:03:44 -05:00] [Interop] Detecting Fujifilm cameras via USB
+[11/24/2025 17:03:44 -05:00] [Focuser] Creating focuser for X-T5
+[11/24/2025 17:03:44 -05:00] [Interop] SDK detected 1 camera(s)
+[11/24/2025 17:03:44 -05:00] [Interop] Opened camera handle 2684667961680 in mode 5 for detection
+[11/24/2025 17:03:44 -05:00] [Interop] Device info: Product='X-T5', Serial='593536383832230227F9C32031313F'
+[11/24/2025 17:03:44 -05:00] [Interop] Creating camera descriptor: DisplayName='X-T5', DeviceId='ENUM:0'
+[11/24/2025 17:03:44 -05:00] [Interop] Detection complete: 1 camera(s) successfully detected
+[11/24/2025 17:03:44] FujiCameraFactory: DetectCamerasAsync returned 1 items
+[11/24/2025 17:03:44] FujiCameraProvider: Found 1 cameras
+[11/24/2025 17:03:44] FujiCameraProvider: Creating camera for X-T5

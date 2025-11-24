@@ -4,58 +4,181 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             d:DesignWidth="360"
-             d:DesignHeight="260">
-    <Grid Margin="16">
+             d:DesignWidth="500"
+             d:DesignHeight="600">
+    <UserControl.Resources>
+        <!-- Theme-aware TextBox Style -->
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+            <Setter Property="Padding" Value="4,2" />
+            <Setter Property="MinHeight" Value="22" />
+        </Style>
+        
+        <!-- Theme-aware ListBox Style -->
+        <Style TargetType="ListBox">
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" />
+            <Style.Resources>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.HighlightTextBrushKey}}" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Style.Resources>
+        </Style>
+    </UserControl.Resources>
+    
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20">
         <StackPanel>
-            <TextBlock Text="Fujifilm Plugin Settings" FontSize="16" FontWeight="Bold" Margin="0 0 0 12" />
+            <!-- Main Settings Section -->
+            <TextBlock Text="Camera Settings" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,20" />
+            
+            <!-- Exposure Settings -->
+            <TextBlock Text="Exposure" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,8" />
+            <StackPanel Margin="0,0,0,24">
+                <!-- Checkbox with clear label alignment -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                    <CheckBox IsChecked="{Binding Settings.ForceManualExposureMode, Mode=TwoWay}" 
+                              VerticalAlignment="Center"
+                              Margin="0,0,8,0" />
+                    <TextBlock Text="Force Manual Exposure Mode" 
+                               VerticalAlignment="Center" />
+                </StackPanel>
+                
+                <!-- Input field with label -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Bulb Release Delay (ms):" 
+                               VerticalAlignment="Center" 
+                               Margin="0,0,12,0" />
+                    <TextBox Grid.Column="1" 
+                             Width="100" 
+                             HorizontalAlignment="Left"
+                             Text="{Binding Settings.BulbReleaseDelayMs, Mode=TwoWay}" />
+                </Grid>
+            </StackPanel>
 
-            <GroupBox Header="Exposure" Margin="0 0 0 12">
-                <StackPanel Margin="8">
-                    <CheckBox Content="Enable SDK Trace" IsChecked="{Binding Settings.EnableSdkTrace, Mode=TwoWay}" />
-                    <CheckBox Content="Force Manual Exposure Mode" IsChecked="{Binding Settings.ForceManualExposureMode, Mode=TwoWay}" />
-                    <StackPanel Orientation="Horizontal" Margin="0 8 0 0">
-                        <TextBlock Text="Bulb Release Delay (ms):" VerticalAlignment="Center" />
-                        <TextBox Width="80" Margin="8 0 0 0" Text="{Binding Settings.BulbReleaseDelayMs, Mode=TwoWay}" />
+            <!-- Output Settings -->
+            <TextBlock Text="Output" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,8" />
+            <StackPanel Margin="0,0,0,24">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                    <CheckBox IsChecked="{Binding Settings.SaveNativeRafSidecar, Mode=TwoWay}" 
+                              VerticalAlignment="Center"
+                              Margin="0,0,8,0" />
+                    <TextBlock Text="Save native RAF sidecar" 
+                               VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <CheckBox IsChecked="{Binding Settings.EnableExtendedFitsMetadata, Mode=TwoWay}" 
+                              VerticalAlignment="Center"
+                              Margin="0,0,8,0" />
+                    <TextBlock Text="Annotate FITS headers with Fuji metadata" 
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Focus Settings -->
+            <TextBlock Text="Focus" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,8" />
+            <StackPanel Margin="0,0,0,24">
+                <!-- Checkbox with clear label alignment -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                    <CheckBox IsChecked="{Binding Settings.ForceManualFocusMode, Mode=TwoWay}" 
+                              VerticalAlignment="Center"
+                              Margin="0,0,8,0" />
+                    <TextBlock Text="Force Manual Focus Mode" 
+                               VerticalAlignment="Center" />
+                </StackPanel>
+                
+                <!-- Input field with label -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Focus Backlash Steps:" 
+                               VerticalAlignment="Center" 
+                               Margin="0,0,12,0" />
+                    <TextBox Grid.Column="1" 
+                             Width="100" 
+                             HorizontalAlignment="Left"
+                             Text="{Binding Settings.FocusBacklashSteps, Mode=TwoWay}" />
+                </Grid>
+            </StackPanel>
+
+            <!-- Advanced Settings (Collapsible) -->
+            <Expander Header="Advanced" Margin="0,0,0,20" IsExpanded="False">
+                <StackPanel Margin="0,12,0,0">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                        <CheckBox IsChecked="{Binding Settings.EnableSdkTrace, Mode=TwoWay}" 
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,8,0" />
+                        <TextBlock Text="Enable SDK Trace (for debugging)" 
+                                   VerticalAlignment="Center" />
                     </StackPanel>
+                    
+                    <TextBlock Text="Camera Discovery" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,8" />
+                    <Button Content="Refresh Cameras" 
+                            Width="140" 
+                            HorizontalAlignment="Left"
+                            Command="{Binding RefreshCamerasAsyncCommand}" 
+                            Margin="0,0,0,8" />
+                    
+                    <ListBox ItemsSource="{Binding AvailableCameras}" 
+                             DisplayMemberPath="DisplayName" 
+                             Height="100" 
+                             Margin="0,0,0,12" 
+                             SelectedItem="{Binding SelectedCamera, Mode=TwoWay}" />
+                    
+                    <Button Content="Load Capabilities" 
+                            Width="140" 
+                            HorizontalAlignment="Left"
+                            Command="{Binding LoadCapabilitiesAsyncCommand}" 
+                            Margin="0,0,0,12" />
+                    
+                    <TextBlock Text="Capabilities" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,8" />
+                    <Border BorderBrush="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}" 
+                            BorderThickness="1" 
+                            Background="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" 
+                            Padding="8"
+                            CornerRadius="2">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="150">
+                            <TextBlock Text="{Binding CapabilitiesSummary}" 
+                                       TextWrapping="Wrap" 
+                                       FontFamily="Consolas" 
+                                       FontSize="11"
+                                       Foreground="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                        </ScrollViewer>
+                    </Border>
                 </StackPanel>
-            </GroupBox>
+            </Expander>
 
-            <GroupBox Header="Output" Margin="0 0 0 12">
-                <StackPanel Margin="8">
-                    <CheckBox Content="Save native RAF sidecar" IsChecked="{Binding Settings.SaveNativeRafSidecar, Mode=TwoWay}" />
-                    <CheckBox Content="Annotate FITS headers with Fuji metadata" IsChecked="{Binding Settings.EnableExtendedFitsMetadata, Mode=TwoWay}" />
-                </StackPanel>
-            </GroupBox>
-
-            <GroupBox Header="Focus" Margin="0 0 0 12">
-                <StackPanel Margin="8">
-                    <CheckBox Content="Force Manual Focus Mode" IsChecked="{Binding Settings.ForceManualFocusMode, Mode=TwoWay}" />
-                    <StackPanel Orientation="Horizontal" Margin="0 8 0 0">
-                        <TextBlock Text="Focus Backlash Steps:" VerticalAlignment="Center" />
-                        <TextBox Width="80" Margin="8 0 0 0" Text="{Binding Settings.FocusBacklashSteps, Mode=TwoWay}" />
-                    </StackPanel>
-                </StackPanel>
-            </GroupBox>
-
-            <GroupBox Header="Discovery" Margin="0 0 0 12">
-                <StackPanel Margin="8">
-                    <Button Content="Refresh Cameras" Width="140" Command="{Binding RefreshCamerasAsyncCommand}" />
-                    <ListBox ItemsSource="{Binding AvailableCameras}" DisplayMemberPath="DisplayName" Height="120" Margin="0 8 0 0" SelectedItem="{Binding SelectedCamera, Mode=TwoWay}" />
-                    <Button Content="Load Capabilities" Width="140" Command="{Binding LoadCapabilitiesAsyncCommand}" Margin="0 4 0 0" />
-                </StackPanel>
-            </GroupBox>
-
-            <GroupBox Header="Capabilities" Margin="0 0 0 12">
-                <StackPanel Margin="8">
-                    <TextBlock Text="{Binding CapabilitiesSummary}" TextWrapping="Wrap" />
-                </StackPanel>
-            </GroupBox>
-
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <Button Content="Save" Width="120" Command="{Binding SaveCommand}" />
-                <Button Content="Export Diagnostics" Width="160" Margin="8,0,0,0" Command="{Binding ExportDiagnosticsAsyncCommand}" />
+            <!-- Action Buttons -->
+            <Separator Margin="0,0,0,16" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Save" 
+                        Width="100" 
+                        Height="32"
+                        Command="{Binding SaveCommand}" 
+                        Margin="0,0,8,0" />
+                <Button Content="Export Diagnostics" 
+                        Width="140" 
+                        Height="32"
+                        Command="{Binding ExportDiagnosticsAsyncCommand}" />
             </StackPanel>
         </StackPanel>
-    </Grid>
+    </ScrollViewer>
 </UserControl>
