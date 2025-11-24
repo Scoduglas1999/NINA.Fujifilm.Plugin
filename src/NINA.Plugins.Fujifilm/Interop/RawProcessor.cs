@@ -91,12 +91,33 @@ public static class RawProcessor
                     result.Width = width;
                     result.Height = height;
                     result.BayerData = ConvertToLinear(bayerData2D);
-                    result.ColorFilterPattern = "XTRANS"; // GFX uses X-Trans
-                    result.PatternWidth = 6;
-                    result.PatternHeight = 6;
                     
-                    // Perform debayering for X-Trans
-                    result.DebayeredRgb = PerformDebayering(buffer, width, height);
+                    // Get correct pattern using P/Invoke (lightweight metadata read)
+                    var patternInfo = GetPatternFromLibRaw(buffer);
+                    result.ColorFilterPattern = patternInfo.Pattern;
+                    result.PatternWidth = patternInfo.Width;
+                    result.PatternHeight = patternInfo.Height;
+
+                    // Get Crop Info
+                    var (cropLeft, cropTop, cropWidth, cropHeight, cropLog) = GetCropInfoFromLibRaw(buffer);
+                    result.ActiveLeft = cropLeft;
+                    result.ActiveTop = cropTop;
+                    result.ActiveWidth = cropWidth;
+                    result.ActiveHeight = cropHeight;
+                    
+                    // Append crop log to error message for diagnostics (even if success)
+                    result.ErrorMessage = (result.ErrorMessage ?? "") + "\n[CropLog] " + cropLog;
+
+                    // Perform debayering ONLY for X-Trans
+                    if (IsXTrans(result.ColorFilterPattern))
+                    {
+                        var (debayered, debayerError) = PerformDebayering(buffer, width, height);
+                        result.DebayeredRgb = debayered;
+                        if (!string.IsNullOrEmpty(debayerError))
+                        {
+                             result.ErrorMessage = (result.ErrorMessage ?? "") + "\n[DebayerLog] " + debayerError;
+                        }
+                    }
                     
                     return result;
                 }
@@ -167,17 +188,18 @@ public static class RawProcessor
         return result;
     }
 
-    private static ushort[]? PerformDebayering(byte[] rawBuffer, int width, int height)
+    private static (ushort[]? Data, string Error) PerformDebayering(byte[] rawBuffer, int width, int height)
     {
         IntPtr processor = IntPtr.Zero;
         IntPtr bufferPtr = IntPtr.Zero;
         IntPtr processedImage = IntPtr.Zero;
+        var sb = new System.Text.StringBuilder();
 
         try
         {
             // Initialize LibRaw
             processor = LibRawNative.libraw_init(0);
-            if (processor == IntPtr.Zero) return null;
+            if (processor == IntPtr.Zero) return (null, "libraw_init failed");
 
             // Copy buffer to unmanaged memory
             bufferPtr = Marshal.AllocHGlobal(rawBuffer.Length);
@@ -185,26 +207,38 @@ public static class RawProcessor
 
             // Open and unpack
             int ret = LibRawNative.libraw_open_buffer(processor, bufferPtr, (UIntPtr)rawBuffer.Length);
-            if (ret != LibRawNative.LIBRAW_SUCCESS) return null;
+            if (ret != LibRawNative.LIBRAW_SUCCESS) return (null, $"libraw_open_buffer failed: {ret}");
 
             ret = LibRawNative.libraw_unpack(processor);
-            if (ret != LibRawNative.LIBRAW_SUCCESS) return null;
+            if (ret != LibRawNative.LIBRAW_SUCCESS) return (null, $"libraw_unpack failed: {ret}");
 
             // Process to RGB
+            // Set output parameters for 16-bit linear
+            // We need to access params structure to set output_bps=16, output_color=1 (sRGB) or 0 (raw)
+            // But for now let's try default dcraw_process which usually does 8-bit unless configured.
+            // Wait, we need 16-bit for NINA? NINA handles 16-bit ushort.
+            // LibRaw defaults might be 8-bit.
+            
+            // Let's check what we get.
             ret = LibRawNative.libraw_dcraw_process(processor);
-            if (ret != LibRawNative.LIBRAW_SUCCESS) return null;
+            if (ret != LibRawNative.LIBRAW_SUCCESS) return (null, $"libraw_dcraw_process failed: {ret}");
 
             // Get processed RGB image
             int errcode = 0;
             processedImage = LibRawNative.libraw_dcraw_make_mem_image(processor, ref errcode);
-            if (processedImage == IntPtr.Zero || errcode != 0) return null;
+            if (processedImage == IntPtr.Zero || errcode != 0) return (null, $"libraw_dcraw_make_mem_image failed: {errcode}");
 
             // Extract RGB data from processed image
             var imgStruct = Marshal.PtrToStructure<LibRawNative.LibRaw_ProcessedImage>(processedImage);
             
-            if (imgStruct.colors != 3 || imgStruct.bits != 16)
-                return null; // We expect 16-bit RGB
+            sb.AppendLine($"Processed Image: Type={imgStruct.type}, W={imgStruct.width}, H={imgStruct.height}, Colors={imgStruct.colors}, Bits={imgStruct.bits}, Size={imgStruct.data_size}");
 
+            if (imgStruct.colors != 3)
+                return (null, $"Expected 3 colors, got {imgStruct.colors}. Log: {sb}");
+            
+            // If bits is 8, we need to upsample to 16 for ushort[]? Or just cast?
+            // ushort[] implies 16-bit. If we get 8-bit, we should probably scale it up.
+            
             int pixelCount = imgStruct.width * imgStruct.height;
             int rgbDataSize = pixelCount * 3; // 3 channels
             ushort[] rgbData = new ushort[rgbDataSize];
@@ -212,16 +246,40 @@ public static class RawProcessor
             // The data follows immediately after the header
             IntPtr dataPtr = IntPtr.Add(processedImage, Marshal.SizeOf<LibRawNative.LibRaw_ProcessedImage>());
             
-            // Copy RGB data (LibRaw returns 16-bit values)
-            short[] tempArray = new short[rgbDataSize];
-            Marshal.Copy(dataPtr, tempArray, 0, rgbDataSize);
-            Buffer.BlockCopy(tempArray, 0, rgbData, 0, rgbDataSize * sizeof(ushort));
+            if (imgStruct.bits == 16)
+            {
+                // Copy RGB data (LibRaw returns 16-bit values)
+                // Note: LibRaw 16-bit data is usually ushort already.
+                // But previous code used short[] tempArray?
+                // Let's assume it's ushort (unsigned).
+                
+                // Marshal.Copy only supports short[], int[], byte[], etc. Not ushort[].
+                // So we copy to short[] and BlockCopy to ushort[].
+                short[] tempArray = new short[rgbDataSize];
+                Marshal.Copy(dataPtr, tempArray, 0, rgbDataSize);
+                Buffer.BlockCopy(tempArray, 0, rgbData, 0, rgbDataSize * sizeof(ushort));
+            }
+            else if (imgStruct.bits == 8)
+            {
+                // 8-bit data. Copy to byte[] then scale to ushort.
+                byte[] tempArray = new byte[rgbDataSize];
+                Marshal.Copy(dataPtr, tempArray, 0, rgbDataSize);
+                for(int i=0; i<rgbDataSize; i++)
+                {
+                    rgbData[i] = (ushort)(tempArray[i] * 257); // Scale 0-255 to 0-65535
+                }
+                sb.AppendLine("Scaled 8-bit data to 16-bit.");
+            }
+            else
+            {
+                return (null, $"Unsupported bit depth: {imgStruct.bits}. Log: {sb}");
+            }
 
-            return rgbData;
+            return (rgbData, sb.ToString());
         }
-        catch
+        catch (Exception ex)
         {
-            return null;
+            return (null, $"Exception: {ex.Message}\n{ex.StackTrace}\nLog: {sb}");
         }
         finally
         {
@@ -233,6 +291,155 @@ public static class RawProcessor
             
             if (processor != IntPtr.Zero)
                 LibRawNative.libraw_close(processor);
+        }
+    }
+
+    private static (string Pattern, int Width, int Height) GetPatternFromLibRaw(byte[] rawBuffer)
+    {
+        IntPtr processor = IntPtr.Zero;
+        IntPtr bufferPtr = IntPtr.Zero;
+
+        try
+        {
+            processor = LibRawNative.libraw_init(0);
+            if (processor == IntPtr.Zero) return ("RGGB", 2, 2);
+
+            bufferPtr = Marshal.AllocHGlobal(rawBuffer.Length);
+            Marshal.Copy(rawBuffer, 0, bufferPtr, rawBuffer.Length);
+
+            if (LibRawNative.libraw_open_buffer(processor, bufferPtr, (UIntPtr)rawBuffer.Length) != LibRawNative.LIBRAW_SUCCESS)
+                return ("RGGB", 2, 2);
+
+            // Get image params to check filters
+            IntPtr iparamsPtr = LibRawNative.libraw_get_iparams(processor);
+            if (iparamsPtr != IntPtr.Zero)
+            {
+                var iparams = Marshal.PtrToStructure<LibRawNative.LibRaw_ImageParams>(iparamsPtr);
+                
+                // Check for X-Trans (filters = 9)
+                // Note: LibRaw defines LIBRAW_XTRANS as 9 in some versions, or checks xtrans array
+                // A simple check is if filters is non-zero and not standard Bayer
+                
+                // If filters is 0, it might be monochrome or something else, but usually implies Bayer logic applies elsewhere
+                // If filters is 9, it is definitely X-Trans
+                
+                if (iparams.filters == 9) // LIBRAW_XTRANS
+                {
+                    return ("XTRANS", 6, 6);
+                }
+                else
+                {
+                    // Decode standard Bayer pattern
+                    return (DecodeBayerPattern(iparams.filters), 2, 2);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[RawProcessor] Failed to get pattern: {ex.Message}");
+        }
+        finally
+        {
+            if (bufferPtr != IntPtr.Zero) Marshal.FreeHGlobal(bufferPtr);
+            if (processor != IntPtr.Zero) LibRawNative.libraw_close(processor);
+        }
+
+        return ("RGGB", 2, 2); // Default fallback
+    }
+
+    public static (int Left, int Top, int Width, int Height, string Log) GetCropInfoFromLibRaw(byte[] rawBuffer)
+    {
+        IntPtr processor = IntPtr.Zero;
+        IntPtr bufferPtr = IntPtr.Zero;
+        var log = new System.Text.StringBuilder();
+
+        try
+        {
+            log.AppendLine("Initializing LibRaw...");
+            processor = LibRawNative.libraw_init(0);
+            if (processor == IntPtr.Zero) 
+            {
+                log.AppendLine("libraw_init failed (returned null).");
+                return (0, 0, 0, 0, log.ToString());
+            }
+
+            bufferPtr = Marshal.AllocHGlobal(rawBuffer.Length);
+            Marshal.Copy(rawBuffer, 0, bufferPtr, rawBuffer.Length);
+
+            log.AppendLine($"Opening buffer of size {rawBuffer.Length}...");
+            int openResult = LibRawNative.libraw_open_buffer(processor, bufferPtr, (UIntPtr)rawBuffer.Length);
+            if (openResult != LibRawNative.LIBRAW_SUCCESS)
+            {
+                log.AppendLine($"libraw_open_buffer failed with code {openResult}.");
+                return (0, 0, 0, 0, log.ToString());
+            }
+
+            IntPtr sizesPtr = IntPtr.Add(processor, 8);
+            var sizes = Marshal.PtrToStructure<LibRawNative.LibRaw_ImageSizes>(sizesPtr);
+
+            log.AppendLine($"LibRaw Sizes: raw_w={sizes.raw_width}, raw_h={sizes.raw_height}, w={sizes.width}, h={sizes.height}, left={sizes.left_margin}, top={sizes.top_margin}");
+
+            // The user reported a black bar on the right side with the default LibRaw width.
+            // This suggests the active width includes some overscan or optical black pixels.
+            // We'll reduce the width by a safe margin (e.g., 48 pixels) to ensure a clean image.
+            // We must ensure the width remains even (divisible by 2) for Bayer/CFA.
+            int safeWidth = sizes.width - 48;
+            if (safeWidth % 2 != 0) safeWidth--;
+
+            log.AppendLine($"Adjusting width for safety: {sizes.width} -> {safeWidth}");
+
+            // Return the margins and active dimensions
+            return (sizes.left_margin, sizes.top_margin, safeWidth, sizes.height, log.ToString());
+        }
+        catch (Exception ex)
+        {
+            log.AppendLine($"Exception in GetCropInfoFromLibRaw: {ex.Message}");
+            log.AppendLine(ex.StackTrace);
+        }
+        finally
+        {
+            if (bufferPtr != IntPtr.Zero) Marshal.FreeHGlobal(bufferPtr);
+            if (processor != IntPtr.Zero) LibRawNative.libraw_close(processor);
+        }
+
+        return (0, 0, 0, 0, log.ToString());
+    }
+
+    private static string DecodeBayerPattern(uint filters)
+    {
+        // LibRaw encodes Bayer pattern in the 'filters' 32-bit integer
+        // It's a 4-character sequence packed into uint
+        // 0x94949494 is standard Bayer? No, LibRaw uses a specific encoding.
+        // Actually, standard LibRaw uses:
+        // 0x16161616 = BIBG (B G G R) ?
+        // Let's use the standard decoding logic:
+        // OpenBayerMap: 0:R, 1:G, 2:B, 3:G2
+        
+        // A simpler way is to look at the first 2x2 block if we could, but we only have the uint.
+        // Common values:
+        // 0x94949494 (2492765332) -> RGGB
+        // 0x61616161 (1633771873) -> BGGR
+        // 0x49494949 (1229531465) -> GBRG
+        // 0x16161616 (370546198)  -> GRBG
+        
+        // Let's try to map common LibRaw filter values
+        switch (filters)
+        {
+            case 0x94949494: return "RGGB";
+            case 0x61616161: return "BGGR";
+            case 0x49494949: return "GBRG";
+            case 0x16161616: return "GRBG";
+            default:
+                // If unknown, try to infer from the first byte
+                byte first = (byte)(filters & 0xFF);
+                return first switch
+                {
+                    0x94 => "RGGB",
+                    0x61 => "BGGR",
+                    0x49 => "GBRG",
+                    0x16 => "GRBG",
+                    _ => "RGGB" // Default
+                };
         }
     }
 
@@ -299,4 +506,8 @@ public class RawProcessingResult
     public int WhiteLevel { get; set; }
     public string? ErrorMessage { get; set; }
     public string? RafSidecarPath { get; set; }
+    public int ActiveLeft { get; set; }
+    public int ActiveTop { get; set; }
+    public int ActiveWidth { get; set; }
+    public int ActiveHeight { get; set; }
 }

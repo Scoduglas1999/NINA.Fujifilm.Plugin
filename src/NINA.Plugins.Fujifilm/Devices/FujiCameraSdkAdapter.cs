@@ -24,6 +24,7 @@ using NINA.Profile.Interfaces;
 
 namespace NINA.Plugins.Fujifilm.Devices;
 
+#nullable enable
 internal sealed class FujiCameraSdkAdapter : IGenericCameraSDK, IDisposable
 {
     private readonly FujiCamera _camera;
@@ -58,12 +59,15 @@ internal sealed class FujiCameraSdkAdapter : IGenericCameraSDK, IDisposable
     private FujiCameraCapabilities _capabilities = FujiCameraCapabilities.Empty;
     private FujiImagePackage? _lastImagePackage;
 
+    private readonly IProfileService _profileService;
+
     public FujiCameraSdkAdapter(
         FujiCamera camera,
         FujifilmCameraDescriptor descriptor,
         IFujifilmDiagnosticsService diagnostics,
         ILibRawAdapter libRawAdapter,
         IFujiSettingsProvider settingsProvider,
+        IProfileService profileService,
         IDisposable cameraLifetime,
         IDisposable libRawLifetime)
     {
@@ -72,7 +76,8 @@ internal sealed class FujiCameraSdkAdapter : IGenericCameraSDK, IDisposable
         _diagnostics = diagnostics;
         _libRawAdapter = libRawAdapter;
         _settingsProvider = settingsProvider;
-        _imageBuilder = new CameraImageBuilder(settingsProvider, diagnostics);
+        _profileService = profileService;
+        _imageBuilder = new CameraImageBuilder(settingsProvider, diagnostics, profileService);
         _cameraLifetime = cameraLifetime;
         _libRawLifetime = libRawLifetime;
     }
@@ -101,6 +106,8 @@ internal sealed class FujiCameraSdkAdapter : IGenericCameraSDK, IDisposable
         _roiBin = 1;
         _connected = true;
         _diagnostics.RecordEvent("Adapter", $"Connected to {_descriptor.DisplayName}");
+        _diagnostics.RecordEvent("Adapter", $"Available ISO values: [{string.Join(", ", _isoValues)}]");
+        _diagnostics.RecordEvent("Adapter", $"Initial ISO set to: {_currentIso}");
         _diagnostics.RecordEvent("Adapter", $"Buffer capacity: {_capabilities.BufferShootCapacity}/{_capabilities.BufferTotalCapacity}");
         _diagnostics.RecordEvent("Adapter", $"State Mode={_capabilities.ModeCode}, AE={_capabilities.AEModeCode}, DR={_capabilities.DynamicRangeCode}, LastError={_capabilities.LastSdkErrorCode} (API {_capabilities.LastApiErrorCode})");
     }
@@ -176,7 +183,9 @@ internal sealed class FujiCameraSdkAdapter : IGenericCameraSDK, IDisposable
 
     public bool SetGain(int value)
     {
+        var previousIso = _currentIso;
         _currentIso = _camera.SelectClosestIso(value);
+        _diagnostics.RecordEvent("Adapter", $"SetGain called: requested={value}, selected={_currentIso} (was {previousIso})");
         return true;
     }
 
@@ -383,20 +392,25 @@ internal sealed class FujiCameraSdkAdapter : IGenericCameraSDK, IDisposable
             _diagnostics.RecordEvent("Adapter", $"X-Trans detected with debayered RGB available from LibRaw (non-destructive).");
             
             // Try returning RGB data for color preview
-            // Note: This is experimental - NINA's GetExposure() signature expects width*height,
-            // but we'll try returning RGB interleaved and see if NINA can handle it.
-            // If this doesn't work, we'll fall back to luminance conversion.
+            // Note: NINA's GetExposure() signature expects width*height pixels.
+            // Returning interleaved RGB (width*height*3) causes the image to appear zoomed in and corrupted
+            // because NINA interprets it as a single channel image.
+            //
+            // Return Synthetic RGGB Bayer data for color preview.
+            // NINA expects a single-channel Bayer image (Width * Height).
+            // We take our high-quality debayered RGB data and "re-mosaic" it into an RGGB pattern.
+            // NINA will then debayer this synthetic image, producing a color preview.
+            // This preserves the correct image dimensions and provides color.
             try
             {
-                var rgbPreview = ConvertRgbToColorPreview(debayeredRgb, package.Width, package.Height);
-                _diagnostics.RecordEvent("Adapter", $"Returning RGB data for X-Trans color preview ({rgbPreview.Length} pixels)");
-                return rgbPreview;
+                var syntheticBayer = ConvertRgbToSyntheticBayer(debayeredRgb, package.Width, package.Height);
+                _diagnostics.RecordEvent("Adapter", $"Returning Synthetic RGGB data for X-Trans preview ({syntheticBayer.Length} pixels)");
+                return syntheticBayer;
             }
             catch (Exception ex)
             {
-                _diagnostics.RecordEvent("Adapter", $"RGB preview failed, falling back to luminance: {ex.Message}");
-                // Fall back to luminance if RGB preview fails
-                return ConvertRgbToLuminance(debayeredRgb, package.Width, package.Height);
+                _diagnostics.RecordEvent("Adapter", $"Synthetic Bayer conversion failed, falling back to raw: {ex.Message}");
+                return package.Pixels;
             }
         }
         
@@ -406,39 +420,68 @@ internal sealed class FujiCameraSdkAdapter : IGenericCameraSDK, IDisposable
     }
     
     /// <summary>
-    /// Attempts to return RGB data in a format that NINA might display as color.
-    /// This is experimental - NINA's GetExposure() signature expects width*height elements,
-    /// but we'll try returning RGB data interleaved to see if NINA can handle it.
-    /// 
-    /// The raw bayer data is always preserved in the image package for proper stacking.
-    /// This debayering is non-destructive - it's only for live preview.
+    /// Converts RGB data to a synthetic RGGB Bayer pattern.
+    /// This allows NINA to display a color preview for X-Trans cameras by treating the data as standard Bayer.
     /// </summary>
-    private ushort[] ConvertRgbToColorPreview(ushort[] rgbData, int width, int height)
+    private ushort[] ConvertRgbToSyntheticBayer(ushort[] rgbData, int width, int height)
     {
-        // NINA's GetExposure() expects width*height elements, but we have width*height*3 RGB data.
-        // We'll try returning the RGB data interleaved (R, G, B, R, G, B...) 
-        // and see if NINA can interpret it. This is experimental.
-        //
-        // Note: This may not work if NINA strictly enforces the width*height constraint,
-        // but it's worth trying for color preview support.
-        var expectedSize = width * height;
-        var rgbSize = width * height * 3;
+        var bayer = new ushort[width * height];
         
-        if (rgbData.Length != rgbSize)
+        // Calculate the source width from the RGB data length
+        // The RGB data might be wider than the target width if we applied a safety crop
+        // rgbData.Length = sourceWidth * height * 3
+        int sourceWidth = rgbData.Length / (height * 3);
+        
+        // Parallel loop for performance
+        Parallel.For(0, height, y =>
         {
-            throw new ArgumentException($"RGB data size mismatch: expected {rgbSize}, got {rgbData.Length}");
-        }
+            for (int x = 0; x < width; x++)
+            {
+                // Target index (packed)
+                int index = y * width + x;
+                
+                // Source index (using source stride)
+                int rgbIndex = (y * sourceWidth + x) * 3;
+                
+                // RGGB Pattern:
+                // R G
+                // G B
+                
+                bool isEvenRow = (y % 2 == 0);
+                bool isEvenCol = (x % 2 == 0);
+                
+                if (isEvenRow)
+                {
+                    if (isEvenCol)
+                    {
+                        // Red
+                        bayer[index] = rgbData[rgbIndex];
+                    }
+                    else
+                    {
+                        // Green (on Red row)
+                        bayer[index] = rgbData[rgbIndex + 1];
+                    }
+                }
+                else
+                {
+                    if (isEvenCol)
+                    {
+                        // Green (on Blue row)
+                        bayer[index] = rgbData[rgbIndex + 1];
+                    }
+                    else
+                    {
+                        // Blue
+                        bayer[index] = rgbData[rgbIndex + 2];
+                    }
+                }
+            }
+        });
         
-        // For now, we'll return the RGB data as-is (interleaved format: RGBRGB...)
-        // NINA might be able to handle this if it checks the array length and metadata.
-        // If this doesn't work, we'll fall back to luminance conversion.
-        _diagnostics.RecordEvent("Adapter", $"Attempting RGB color preview: {rgbSize} RGB pixels for {width}x{height} image");
-        
-        // Return RGB data - NINA might handle it if it's flexible about array sizes
-        // or if we can indicate via metadata that it's RGB
-        return rgbData;
+        return bayer;
     }
-    
+
     /// <summary>
     /// Converts RGB data (RGBRGB... format) to luminance for NINA preview display.
     /// This is the fallback method when RGB preview doesn't work.

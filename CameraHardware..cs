@@ -22,6 +22,9 @@ using System.Text.Json; // Required for JSON deserialization
 // Add using for the C++/CLI Wrapper namespace (adjust if you used a different namespace)
 using Fujifilm.LibRawWrapper; // Assuming this is your C++/CLI wrapper namespace
 
+using ASCOM.ScdouglasFujifilm.Camera;
+using NINA.Plugins.Fujifilm.Interop; // Added for RawProcessor
+
 namespace ASCOM.ScdouglasFujifilm.Camera
 {
     #region Configuration Classes
@@ -2265,24 +2268,60 @@ namespace ASCOM.ScdouglasFujifilm.Camera
                     width = bayerDataUShort.GetLength(1);
                 }
 
-                int[,] bayerArrayInt = new int[width, height]; // ASCOM usually expects [width, height] or [X, Y]
+                // --- Get Crop Info from LibRaw ---
+                var (cropLeft, cropTop, cropWidth, cropHeight) = RawProcessor.GetCropInfoFromLibRaw(downloadBuffer);
+                LogMessage("DownloadImageData", $"LibRaw Crop Info: Left={cropLeft}, Top={cropTop}, Width={cropWidth}, Height={cropHeight}");
+
+                int finalWidth = width;
+                int finalHeight = height;
+                int startX = 0;
+                int startY = 0;
+
+                // If valid crop info is returned, use it
+                if (cropWidth > 0 && cropHeight > 0 && (cropWidth < width || cropHeight < height))
+                {
+                    LogMessage("DownloadImageData", $"Applying crop: {width}x{height} -> {cropWidth}x{cropHeight} (Offset: {cropLeft},{cropTop})");
+                    finalWidth = cropWidth;
+                    finalHeight = cropHeight;
+                    startX = cropLeft;
+                    startY = cropTop;
+                }
+                else
+                {
+                    LogMessage("DownloadImageData", "No cropping needed or invalid crop info. Using full image.");
+                }
+
+                int[,] bayerArrayInt = new int[finalWidth, finalHeight]; // ASCOM usually expects [width, height] or [X, Y]
 
                 // Check dimensions match expected camera size (optional sanity check)
-                if (width != cameraXSize || height != cameraYSize)
+                if (finalWidth != cameraXSize || finalHeight != cameraYSize)
                 {
-                    LogMessage("DownloadImageData", $"WARNING: LibRaw dimensions ({width}x{height}) differ from expected ({cameraXSize}x{cameraYSize}). Using LibRaw dimensions.");
+                    LogMessage("DownloadImageData", $"WARNING: Final dimensions ({finalWidth}x{finalHeight}) differ from expected ({cameraXSize}x{cameraYSize}).");
                 }
 
-                // Copy data, converting ushort to int
+                // Copy data, converting ushort to int and applying crop
                 // Assuming ASCOM ImageArray wants [X, Y] which means [width, height]
-                for (int y = 0; y < height; y++) // Iterate rows (dimension 0 of C# array)
+                for (int y = 0; y < finalHeight; y++) // Iterate rows (dimension 0 of C# array)
                 {
-                    for (int x = 0; x < width; x++) // Iterate columns (dimension 1 of C# array)
+                    for (int x = 0; x < finalWidth; x++) // Iterate columns (dimension 1 of C# array)
                     {
-                        bayerArrayInt[x, y] = bayerDataUShort[y, x]; // Assign C#[row, col] to ASCOM[x, y]
+                        // Source index includes the crop offset
+                        int srcY = startY + y;
+                        int srcX = startX + x;
+
+                        // Boundary check to prevent index out of range
+                        if (srcY < height && srcX < width)
+                        {
+                            bayerArrayInt[x, y] = bayerDataUShort[srcY, srcX]; // Assign C#[row, col] to ASCOM[x, y]
+                        }
+                        else
+                        {
+                             // Should not happen if logic is correct, but safe fallback
+                             bayerArrayInt[x, y] = 0;
+                        }
                     }
                 }
-                LogMessage("DownloadImageData", $"Converted ushort[,] to int[,]");
+                LogMessage("DownloadImageData", $"Converted ushort[,] to int[,] with crop applied.");
 
                 lastImageArray = bayerArrayInt; // Store the final int[,] array
 

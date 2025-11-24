@@ -97,6 +97,7 @@ public sealed class CameraModelCatalog : ICameraModelCatalog
                     foreach (var key in keys)
                     {
                         lookup[key] = config;
+                        // try { System.IO.File.AppendAllText(@"c:\Users\scdou\Documents\NINA.Fujifilm.Plugin\debug_log.txt", $"[{DateTime.Now}] CameraModelCatalog.Reload: Mapped key '{key}' to {config.ModelName}\n"); } catch {}
                     }
                     try { System.IO.File.AppendAllText(@"c:\Users\scdou\Documents\NINA.Fujifilm.Plugin\debug_log.txt", $"[{DateTime.Now}] CameraModelCatalog.Reload: Loaded config for {config.ModelName}\n"); } catch {}
                 }
@@ -109,7 +110,7 @@ public sealed class CameraModelCatalog : ICameraModelCatalog
 
             _configs = configs;
             _lookup = lookup;
-            try { System.IO.File.AppendAllText(@"c:\Users\scdou\Documents\NINA.Fujifilm.Plugin\debug_log.txt", $"[{DateTime.Now}] CameraModelCatalog.Reload: Total loaded: {configs.Count} configs\n"); } catch {}
+            try { System.IO.File.AppendAllText(@"c:\Users\scdou\Documents\NINA.Fujifilm.Plugin\debug_log.txt", $"[{DateTime.Now}] CameraModelCatalog.Reload: Total loaded: {configs.Count} configs. Keys: {string.Join(", ", _lookup.Keys)}\n"); } catch {}
         }
     }
 
@@ -118,6 +119,7 @@ public sealed class CameraModelCatalog : ICameraModelCatalog
         // AppContext.BaseDirectory returns NINA's exe directory, not the plugin directory.
         // We need to use the plugin assembly's location instead.
         var assemblyLocation = System.Reflection.Assembly.GetExecutingAssembly().Location;
+        try { System.IO.File.AppendAllText(@"c:\Users\scdou\Documents\NINA.Fujifilm.Plugin\debug_log.txt", $"[{DateTime.Now}] ResolveConfigDirectory: Assembly Location: '{assemblyLocation}'\n"); } catch {}
         var assemblyDir = Path.GetDirectoryName(assemblyLocation) ?? AppContext.BaseDirectory;
         return Path.Combine(assemblyDir, "Configuration", "Assets", "CameraConfigs");
     }

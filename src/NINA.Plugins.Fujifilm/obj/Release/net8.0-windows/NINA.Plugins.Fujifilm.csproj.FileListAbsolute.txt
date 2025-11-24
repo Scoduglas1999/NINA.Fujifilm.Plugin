@@ -14,6 +14,10 @@ C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\bin\Rele
 C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\bin\Release\net8.0-windows\Interop\Native\.gitkeep
 C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\bin\Release\net8.0-windows\Interop\Native\FujifilmCameraInfo.cs
 C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\bin\Release\net8.0-windows\Interop\Native\FujifilmCameraSession.cs
+C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\bin\Release\net8.0-windows\Interop\Native\libraw.dll
+C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\bin\Release\net8.0-windows\Interop\Native\LibRawWrapper.dll
+C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\bin\Release\net8.0-windows\LibRawWrapper.dll
+C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\bin\Release\net8.0-windows\libraw.dll
 C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\bin\Release\net8.0-windows\plugin.json
 C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\bin\Release\net8.0-windows\NINA.Plugins.Fujifilm.dll.config
 C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\bin\Release\net8.0-windows\NINA.Plugins.Fujifilm.deps.json

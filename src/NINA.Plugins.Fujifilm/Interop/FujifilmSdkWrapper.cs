@@ -52,10 +52,25 @@ internal static class FujifilmSdkWrapper
     public const int XSDK_RELEASE_N_BULBS1OFF = XSDK_RELEASE_N_BULBS2OFF | XSDK_RELEASE_N_S1OFF;
     public const int XSDK_SHUTTER_BULB = -1;
 
-    public const int XSDK_DRANGE_100 = 100;
+    public const int XSDK_DRANGE_100 = 0x0064;
+    
+    // AE Mode constants
+    public const int XSDK_AE_OFF = 0x0001;  // Manual exposure mode
+    public const int XSDK_AE_PROGRAM = 0x0006;  // Program AE
+    public const int XSDK_AE_APERTURE_PRIORITY = 0x0003;  // Aperture priority
+    public const int XSDK_AE_SHUTTER_PRIORITY = 0x0004;  // Shutter priority
     public const int XSDK_DRANGE_200 = 200;
     public const int XSDK_DRANGE_400 = 400;
     public const int XSDK_DRANGE_800 = 800;
+    public const int XSDK_DRANGE_AUTO = 0xffff;
+    
+    // Shooting Mode Constants
+    public const int XSDK_MODE_M = 0x1101;  // Manual mode
+
+    // Media Record Constants
+    public const int XSDK_MEDIAREC_OFF = 0;
+    public const int XSDK_MEDIAREC_SD = 1;
+    public const int XSDK_MEDIAREC_RAW = 2;
 
     [DllImport(SdkDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "XSDK_Init")]
     public static extern int XSDK_Init(IntPtr hLib);
@@ -79,13 +94,13 @@ internal static class FujifilmSdkWrapper
     public static extern int XSDK_GetDeviceInfoEx(IntPtr hCamera, out XSDK_DeviceInformation pDevInfo, out int plNumAPICode, IntPtr plAPICode);
 
     [DllImport(SdkDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "XSDK_CapShutterSpeed")]
-    public static extern int XSDK_CapShutterSpeed(IntPtr hCamera, out int plNumShutterSpeed, IntPtr plShutterSpeed, out int plBulbCapable);
+    public static extern int XSDK_CapShutterSpeed(IntPtr hCamera, ref int plNumShutterSpeed, IntPtr plShutterSpeed, out int plBulbCapable);
 
     [DllImport(SdkDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "XSDK_SetShutterSpeed")]
     public static extern int XSDK_SetShutterSpeed(IntPtr hCamera, int lShutterSpeed, int lBulb);
 
     [DllImport(SdkDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "XSDK_CapSensitivity")]
-    public static extern int XSDK_CapSensitivity(IntPtr hCamera, int lDR, out int plNumSensitivity, IntPtr plSensitivity);
+    public static extern int XSDK_CapSensitivity(IntPtr hCamera, ref int lDR, ref int plNumSensitivity, IntPtr plSensitivity);
 
     [DllImport(SdkDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "XSDK_SetSensitivity")]
     public static extern int XSDK_SetSensitivity(IntPtr hCamera, int lSensitivity);
@@ -105,8 +120,17 @@ internal static class FujifilmSdkWrapper
     [DllImport(SdkDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "XSDK_SetRAWCompression")]
     public static extern int XSDK_SetRAWCompression(IntPtr hCamera, int lRawCompression);
 
+    [DllImport(SdkDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "XSDK_SetAEMode")]
+    public static extern int XSDK_SetAEMode(IntPtr hCamera, int lAEMode);
+
     [DllImport(SdkDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "XSDK_GetAEMode")]
     public static extern int XSDK_GetAEMode(IntPtr hCamera, out int plAEMode);
+
+    [DllImport(SdkDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "XSDK_SetMediaRecord")]
+    public static extern int XSDK_SetMediaRecord(IntPtr hCamera, int lMediaRecord);
+
+    [DllImport(SdkDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "XSDK_GetMediaRecord")]
+    public static extern int XSDK_GetMediaRecord(IntPtr hCamera, out int plMediaRecord);
 
     [DllImport(SdkDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "XSDK_GetLensInfo")]
     public static extern int XSDK_GetLensInfo(IntPtr hCamera, out XSDK_LensInformation pLensInfo);
@@ -150,8 +174,27 @@ internal static class FujifilmSdkWrapper
     [DllImport(SdkDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "XSDK_GetDynamicRange")]
     public static extern int XSDK_GetDynamicRange(IntPtr hCamera, out int plDRange);
 
+    [DllImport(SdkDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "XSDK_GetImageSize")]
+    public static extern int XSDK_GetImageSize(IntPtr hCamera, out int plImageSize);
+
+    // Image Size Constants (Generic/Common)
+    // The actual values depend on the camera generation, but we can define common ones or handle raw ints.
+    // For GFX100S:
+    // L 4:3 is what we mostly care about.
+    // We will pass the raw int to CameraSpecs and handle it there.
+
     [DllImport(SdkDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "XSDK_GetErrorNumber")]
     public static extern int XSDK_GetErrorNumber(IntPtr hCamera, out int plAPICode, out int plERRCode);
+
+    // Model-dependent property functions (for Long Exposure NR, Noise Reduction, etc.)
+    [DllImport(SdkDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "XSDK_CapProp")]
+    public static extern int XSDK_CapProp(IntPtr hCamera, int lAPICode, int lAPIParam, out int plNum, IntPtr plValues);
+
+    [DllImport(SdkDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "XSDK_SetProp")]
+    public static extern int XSDK_SetProp(IntPtr hCamera, int lAPICode, int lAPIParam, long lValue);
+
+    [DllImport(SdkDllName, CallingConvention = CallingConvention.Cdecl, EntryPoint = "XSDK_GetProp")]
+    public static extern int XSDK_GetProp(IntPtr hCamera, int lAPICode, int lAPIParam, out long plValue);
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1)]
     public struct XSDK_DeviceInformation

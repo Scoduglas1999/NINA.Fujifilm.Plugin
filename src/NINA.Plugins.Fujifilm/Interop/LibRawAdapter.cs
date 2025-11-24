@@ -4,7 +4,9 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
+using NINA.Plugins.Fujifilm.Configuration.Loading;
 using NINA.Plugins.Fujifilm.Diagnostics;
+using NINA.Profile.Interfaces;
 
 namespace NINA.Plugins.Fujifilm.Interop;
 
@@ -18,12 +20,19 @@ public interface ILibRawAdapter
 public sealed class LibRawAdapter : ILibRawAdapter
 {
     private readonly IFujifilmDiagnosticsService _diagnostics;
+    private readonly IProfileService _profileService;
+    private readonly ICameraModelCatalog _catalog;
 
     [ImportingConstructor]
-    public LibRawAdapter(IFujifilmDiagnosticsService diagnostics)
+    public LibRawAdapter(
+        IFujifilmDiagnosticsService diagnostics,
+        IProfileService profileService,
+        ICameraModelCatalog catalog)
     {
         try { System.IO.File.AppendAllText(@"c:\Users\scdou\Documents\NINA.Fujifilm.Plugin\debug_log.txt", $"[{DateTime.Now}] LibRawAdapter Constructor called\n"); } catch {}
         _diagnostics = diagnostics;
+        _profileService = profileService;
+        _catalog = catalog;
     }
 
     public async Task<LibRawResult> ProcessRawAsync(byte[] buffer, CancellationToken cancellationToken)
@@ -98,35 +107,99 @@ public sealed class LibRawAdapter : ILibRawAdapter
     {
         try
         {
-            var directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "NINA", "Plugins", "Fujifilm", "Frames");
-            Directory.CreateDirectory(directory);
-            var path = Path.Combine(directory, $"frame-{DateTime.UtcNow:yyyyMMdd-HHmmssfff}.raf");
+            // Use NINA's configured image directory
+            var imageDirectory = _profileService.ActiveProfile.ImageFileSettings.FilePath;
+            Directory.CreateDirectory(imageDirectory);
+            
+            // Generate filename with timestamp (basic pattern - no exposure/ISO info available here)
+            var timestamp = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
+            var fileName = $"Fuji_{timestamp}_recovery.raf";
+            
+            var path = Path.Combine(imageDirectory, fileName);
             File.WriteAllBytes(path, buffer);
+            
+            _diagnostics.RecordEvent("LibRaw", $"Saved RAF recovery file to: {path}");
             return path;
         }
         catch (Exception ex)
         {
-            _diagnostics.RecordEvent("LibRaw", $"Failed to persist RAF sidecar: {ex.Message}");
+            _diagnostics.RecordEvent("LibRaw", $"Failed to save RAF recovery file: {ex.Message}");
             return null;
         }
     }
 
     private LibRawResult MapToLibRawResult(RawProcessingResult processed)
+{
+    // Crop optical black padding if present
+    // Use the active area detected by LibRaw
+    var (croppedData, croppedWidth, croppedHeight) = CropBayerPadding(
+        processed.BayerData,
+        processed.Width,
+        processed.Height,
+        processed.ActiveLeft,
+        processed.ActiveTop,
+        processed.ActiveWidth,
+        processed.ActiveHeight);
+    
+    return new LibRawResult(
+        BayerData: croppedData,
+        Width: croppedWidth,
+        Height: croppedHeight,
+        ColorFilterPattern: processed.ColorFilterPattern,
+        PatternWidth: processed.PatternWidth,
+        PatternHeight: processed.PatternHeight,
+        BlackLevel: processed.BlackLevel,
+        WhiteLevel: processed.WhiteLevel,
+        Status: processed.Status,
+        RafSidecarPath: processed.RafSidecarPath,
+        DebayeredRgb: processed.DebayeredRgb
+    );
+}
+
+/// <summary>
+/// Crops optical black padding from Bayer data using explicit margins.
+/// </summary>
+private (ushort[] Data, int Width, int Height) CropBayerPadding(
+    ushort[] bayerData,
+    int libRawWidth,
+    int libRawHeight,
+    int activeLeft,
+    int activeTop,
+    int activeWidth,
+    int activeHeight)
+{
+    // If no valid active area info, return original
+    if (activeWidth <= 0 || activeHeight <= 0 || (activeWidth == libRawWidth && activeHeight == libRawHeight))
     {
-        return new LibRawResult(
-            BayerData: processed.BayerData,
-            Width: processed.Width,
-            Height: processed.Height,
-            ColorFilterPattern: processed.ColorFilterPattern,
-            PatternWidth: processed.PatternWidth,
-            PatternHeight: processed.PatternHeight,
-            BlackLevel: processed.BlackLevel,
-            WhiteLevel: processed.WhiteLevel,
-            Status: processed.Status,
-            RafSidecarPath: processed.RafSidecarPath,
-            DebayeredRgb: processed.DebayeredRgb
-        );
+        _diagnostics.RecordEvent("LibRaw", $"No cropping needed: LibRaw={libRawWidth}x{libRawHeight}");
+        return (bayerData, libRawWidth, libRawHeight);
     }
+    
+    _diagnostics.RecordEvent("LibRaw", 
+        $"Cropping Bayer data: {libRawWidth}x{libRawHeight} → {activeWidth}x{activeHeight}, " +
+        $"margins: left={activeLeft}, top={activeTop}");
+    
+    // Crop row by row
+    var croppedData = new ushort[activeWidth * activeHeight];
+    for (int y = 0; y < activeHeight; y++)
+    {
+        int srcRow = activeTop + y;
+        int srcOffset = srcRow * libRawWidth + activeLeft;
+        int destOffset = y * activeWidth;
+        
+        // Boundary check
+        if (srcRow >= libRawHeight) break;
+        
+        // Copy one row
+        int copyLength = Math.Min(activeWidth, libRawWidth - activeLeft);
+        if (copyLength > 0)
+        {
+            Array.Copy(bayerData, srcOffset, croppedData, destOffset, copyLength);
+        }
+    }
+    
+    return (croppedData, activeWidth, activeHeight);
+}
 }
 
 public enum LibRawProcessingStatus

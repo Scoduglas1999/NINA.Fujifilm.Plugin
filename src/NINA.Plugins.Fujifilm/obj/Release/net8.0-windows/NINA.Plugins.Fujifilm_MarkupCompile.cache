@@ -4,7 +4,7 @@
 library
 C#
 .cs
-c:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\obj\Release\net8.0-windows\
+C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\obj\Release\net8.0-windows\
 NINA.Plugins.Fujifilm
 none
 false
@@ -12,9 +12,9 @@ TRACE;RELEASE;NET;NET8_0;NETCOREAPP
 
 2-424700804
 1-1534870914
-32-1377880055
+35135344901
 273-1119593785
 UI\Options.xaml;UI\SettingsView.xaml;
 
-True
+False
 

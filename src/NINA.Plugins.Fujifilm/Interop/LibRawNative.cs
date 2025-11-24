@@ -70,9 +70,6 @@ internal static class LibRawNative
     [DllImport(LibRawDll, CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr libraw_get_image_params(IntPtr data);
 
-    [DllImport(LibRawDll, CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr libraw_get_rawdata(IntPtr data);
-
     #endregion
 
     #region Structures
@@ -92,7 +89,7 @@ internal static class LibRawNative
         public double pixel_aspect;
         public int flip;
         
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
         public int[] mask;
         
         public ushort raw_inset_crop_top;
@@ -191,19 +188,6 @@ internal static class LibRawNative
         public int WB_Coeffs_7_0, WB_Coeffs_7_1, WB_Coeffs_7_2, WB_Coeffs_7_3;
         public int WB_Coeffs_8_0, WB_Coeffs_8_1, WB_Coeffs_8_2, WB_Coeffs_8_3;
         public int WB_Coeffs_9_0, WB_Coeffs_9_1, WB_Coeffs_9_2, WB_Coeffs_9_3;
-        public int WB_Coeffs_10_0, WB_Coeffs_10_1, WB_Coeffs_10_2, WB_Coeffs_10_3;
-        public int WB_Coeffs_11_0, WB_Coeffs_11_1, WB_Coeffs_11_2, WB_Coeffs_11_3;
-        public int WB_Coeffs_12_0, WB_Coeffs_12_1, WB_Coeffs_12_2, WB_Coeffs_12_3;
-        public int WB_Coeffs_13_0, WB_Coeffs_13_1, WB_Coeffs_13_2, WB_Coeffs_13_3;
-        public int WB_Coeffs_14_0, WB_Coeffs_14_1, WB_Coeffs_14_2, WB_Coeffs_14_3;
-        public int WB_Coeffs_15_0, WB_Coeffs_15_1, WB_Coeffs_15_2, WB_Coeffs_15_3;
-
-        public float WBCT_Coeffs_0_0, WBCT_Coeffs_0_1, WBCT_Coeffs_0_2, WBCT_Coeffs_0_3, WBCT_Coeffs_0_4;
-        public float WBCT_Coeffs_1_0, WBCT_Coeffs_1_1, WBCT_Coeffs_1_2, WBCT_Coeffs_1_3, WBCT_Coeffs_1_4;
-        public float WBCT_Coeffs_2_0, WBCT_Coeffs_2_1, WBCT_Coeffs_2_2, WBCT_Coeffs_2_3, WBCT_Coeffs_2_4;
-        public float WBCT_Coeffs_3_0, WBCT_Coeffs_3_1, WBCT_Coeffs_3_2, WBCT_Coeffs_3_3, WBCT_Coeffs_3_4;
-        public float WBCT_Coeffs_4_0, WBCT_Coeffs_4_1, WBCT_Coeffs_4_2, WBCT_Coeffs_4_3, WBCT_Coeffs_4_4;
-        public float WBCT_Coeffs_5_0, WBCT_Coeffs_5_1, WBCT_Coeffs_5_2, WBCT_Coeffs_5_3, WBCT_Coeffs_5_4;
         public float WBCT_Coeffs_6_0, WBCT_Coeffs_6_1, WBCT_Coeffs_6_2, WBCT_Coeffs_6_3, WBCT_Coeffs_6_4;
         public float WBCT_Coeffs_7_0, WBCT_Coeffs_7_1, WBCT_Coeffs_7_2, WBCT_Coeffs_7_3, WBCT_Coeffs_7_4;
         public float WBCT_Coeffs_8_0, WBCT_Coeffs_8_1, WBCT_Coeffs_8_2, WBCT_Coeffs_8_3, WBCT_Coeffs_8_4;
@@ -301,7 +285,7 @@ internal static class LibRawNative
     [StructLayout(LayoutKind.Sequential)]
     public struct LibRaw_ImageParams
     {
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
         public byte[] guard;
 
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64)]
@@ -326,13 +310,13 @@ internal static class LibRawNative
         public int colors;
         public uint filters;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 36)]
         public byte[] xtrans;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 36)]
         public byte[] xtrans_abs;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 48)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
         public byte[] cdesc;
 
         public uint xmplen;
@@ -351,7 +335,7 @@ internal static class LibRawNative
     [StructLayout(LayoutKind.Sequential)]
     public struct LibRaw_ProcessedImage
     {
-        public ushort type;
+        public int type; // LibRaw_image_formats enum (4 bytes)
         public ushort height;
         public ushort width;
         public ushort colors;

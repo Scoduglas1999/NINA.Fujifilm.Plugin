@@ -7,6 +7,7 @@ using NINA.Plugins.Fujifilm.Diagnostics;
 using NINA.Plugins.Fujifilm.Devices;
 using NINA.Plugins.Fujifilm.Interop;
 using NINA.Plugins.Fujifilm.Settings;
+using NINA.Profile.Interfaces;
 
 namespace NINA.Plugins.Fujifilm.Imaging;
 
@@ -14,11 +15,16 @@ internal sealed class CameraImageBuilder
 {
     private readonly IFujiSettingsProvider _settingsProvider;
     private readonly IFujifilmDiagnosticsService _diagnostics;
+    private readonly IProfileService _profileService;
 
-    public CameraImageBuilder(IFujiSettingsProvider settingsProvider, IFujifilmDiagnosticsService diagnostics)
+    public CameraImageBuilder(
+        IFujiSettingsProvider settingsProvider, 
+        IFujifilmDiagnosticsService diagnostics,
+        IProfileService profileService)
     {
         _settingsProvider = settingsProvider;
         _diagnostics = diagnostics;
+        _profileService = profileService;
     }
 
     public FujiImagePackage Build(
@@ -125,15 +131,24 @@ internal sealed class CameraImageBuilder
 
         try
         {
-            var directory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "NINA", "Plugins", "Fujifilm", "Frames");
-            Directory.CreateDirectory(directory);
-            var filePath = Path.Combine(directory, $"native-{DateTime.UtcNow:yyyyMMdd-HHmmssfff}.raf");
+            // Use NINA's configured image directory
+            var imageDirectory = _profileService.ActiveProfile.ImageFileSettings.FilePath;
+            Directory.CreateDirectory(imageDirectory);
+            
+            // Generate filename with timestamp, exposure, and ISO
+            var timestamp = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
+            var exposureStr = $"{raw.ExposureSeconds:F1}s".Replace(".", "_");
+            var fileName = $"Fuji_{timestamp}_{exposureStr}_ISO{raw.Iso}.raf";
+            
+            var filePath = Path.Combine(imageDirectory, fileName);
             File.WriteAllBytes(filePath, raw.RawBuffer);
+            
+            _diagnostics.RecordEvent("CameraImageBuilder", $"Saved RAF file to: {filePath}");
             return filePath;
         }
         catch (Exception ex)
         {
-            _diagnostics.RecordEvent("CameraImageBuilder", $"Failed to persist RAF sidecar: {ex.Message}");
+            _diagnostics.RecordEvent("CameraImageBuilder", $"Failed to save RAF file: {ex.Message}");
             return null;
         }
     }
@@ -158,31 +173,31 @@ internal sealed class CameraImageBuilder
         {
             // Standardize pattern name for FITS/XISF compatibility
             var standardizedPattern = pattern.ToUpperInvariant();
+            
+            // For X-Trans, we are now providing a Synthetic RGGB image for NINA to debayer.
+            // So we must report BAYERPAT=RGGB so NINA knows how to handle it.
+            // We preserve the original X-Trans pattern in XTNSPAT.
             if (standardizedPattern.StartsWith("XTRANS", StringComparison.OrdinalIgnoreCase) || 
                 standardizedPattern.StartsWith("X-", StringComparison.OrdinalIgnoreCase))
             {
-                standardizedPattern = "XTRANS";
+                // Report RGGB to NINA so it debayers the synthetic image
+                metadata["BAYERPAT"] = "RGGB";
+                metadata["XTNSPAT"] = "XTRANS"; // Custom keyword for the real pattern
+                
+                // Set dimensions for RGGB (2x2)
+                metadata["CFAAXIS"] = "2x2";
+            }
+            else
+            {
+                metadata["BAYERPAT"] = standardizedPattern;
+                
+                // Determine pattern dimensions for standard Bayer
+                var patternWidth = processed.PatternWidth > 0 ? processed.PatternWidth : 2;
+                var patternHeight = processed.PatternHeight > 0 ? processed.PatternHeight : 2;
+                metadata["CFAAXIS"] = $"{patternWidth}x{patternHeight}";
             }
 
-            metadata["BAYERPAT"] = standardizedPattern;
-            
-            // Determine pattern dimensions
-            var patternWidth = processed.PatternWidth > 0 ? processed.PatternWidth : 
-                             (standardizedPattern == "XTRANS" ? 6 : 2);
-            var patternHeight = processed.PatternHeight > 0 ? processed.PatternHeight : 
-                              (standardizedPattern == "XTRANS" ? 6 : 2);
-            
-            metadata["CFAAXIS"] = $"{patternWidth}x{patternHeight}";
             metadata["CFA"] = "1"; // Indicates color filter array present
-            
-            // For X-Trans: Indicate that debayered RGB data is available for preview
-            // This metadata might help NINA understand that the image is already debayered
-            if (standardizedPattern == "XTRANS")
-            {
-                // Check if debayered RGB is available (will be set later in the package)
-                // This is a hint that the image has been debayered non-destructively
-                metadata["DEBAYERED"] = "1"; // Indicates debayered data available
-            }
         }
 
         // Standard astrophotography keywords

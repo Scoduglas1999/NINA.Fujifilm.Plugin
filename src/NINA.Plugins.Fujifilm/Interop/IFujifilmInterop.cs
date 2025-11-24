@@ -13,4 +13,7 @@ public interface IFujifilmInterop : IAsyncDisposable
     Task<IReadOnlyList<FujifilmCameraInfo>> DetectCamerasAsync(CancellationToken cancellationToken);
     Task<FujifilmCameraSession> OpenCameraAsync(string deviceId, CancellationToken cancellationToken);
     Task CloseCameraAsync(FujifilmCameraSession session);
+    Task<(int Width, int Height)> GetImageInfoAsync(FujifilmCameraSession session);
+    Task<int> GetImageSizeAsync(FujifilmCameraSession session);
+    Task<int> GetSensitivityAsync(FujifilmCameraSession session);
 }

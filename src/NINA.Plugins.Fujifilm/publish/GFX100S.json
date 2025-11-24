@@ -10,6 +10,108 @@
   "DefaultMinExposure": 0.00003125,
   "DefaultMaxExposure": 3600.0,
   "DefaultBulbCapable": true,
+  "ShutterSpeedMap": [
+    {
+      "SdkCode": 32000,
+      "Duration": 0.00003125
+    },
+    {
+      "SdkCode": 16000,
+      "Duration": 0.0000625
+    },
+    {
+      "SdkCode": 8000,
+      "Duration": 0.000125
+    },
+    {
+      "SdkCode": 4000,
+      "Duration": 0.00025
+    },
+    {
+      "SdkCode": 2000,
+      "Duration": 0.0005
+    },
+    {
+      "SdkCode": 1000,
+      "Duration": 0.001
+    },
+    {
+      "SdkCode": 500,
+      "Duration": 0.002
+    },
+    {
+      "SdkCode": 250,
+      "Duration": 0.004
+    },
+    {
+      "SdkCode": 125,
+      "Duration": 0.008
+    },
+    {
+      "SdkCode": 60,
+      "Duration": 0.01666667
+    },
+    {
+      "SdkCode": 50,
+      "Duration": 0.02
+    },
+    {
+      "SdkCode": 30,
+      "Duration": 0.03333333
+    },
+    {
+      "SdkCode": 25,
+      "Duration": 0.04
+    },
+    {
+      "SdkCode": 20,
+      "Duration": 0.05
+    },
+    {
+      "SdkCode": 15,
+      "Duration": 0.06666667
+    },
+    {
+      "SdkCode": 13,
+      "Duration": 0.07692308
+    },
+    {
+      "SdkCode": 10,
+      "Duration": 0.1
+    },
+    {
+      "SdkCode": 8,
+      "Duration": 0.125
+    },
+    {
+      "SdkCode": 6,
+      "Duration": 0.16666667
+    },
+    {
+      "SdkCode": 5,
+      "Duration": 0.2
+    },
+    {
+      "SdkCode": 4,
+      "Duration": 0.25
+    },
+    {
+      "SdkCode": 3,
+      "Duration": 0.33333333
+    },
+    {
+      "SdkCode": 2,
+      "Duration": 0.5
+    },
+    {
+      "SdkCode": 1,
+      "Duration": 1.0
+    },
+    {
+      "SdkCode": -1,
+      "Duration": 3600.0
+    }
+  ],
   "SdkConstants": {
     "ModeManual": 4353,
     "FocusModeManual": 1,

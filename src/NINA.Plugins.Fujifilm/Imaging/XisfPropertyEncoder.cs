@@ -161,3 +161,5 @@ internal static class XisfPropertyEncoder
 
 
 
+
+

@@ -1,7 +1,7 @@
-C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\obj\Debug\net8.0-windows\NINA.Plugins.Fujifilm.csproj.AssemblyReference.cache
-C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\obj\Debug\net8.0-windows\UI\SettingsView.baml
-C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\obj\Debug\net8.0-windows\UI\Options.g.cs
-C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\obj\Debug\net8.0-windows\UI\SettingsView.g.cs
-C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
-C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\obj\Debug\net8.0-windows\NINA.Plugins.Fujifilm_MarkupCompile.cache
-C:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\obj\Debug\net8.0-windows\NINA.Plugins.Fujifilm_MarkupCompile.lref
+c:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\obj\Debug\net8.0-windows\NINA.Plugins.Fujifilm.csproj.AssemblyReference.cache
+c:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\obj\Debug\net8.0-windows\UI\SettingsView.baml
+c:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\obj\Debug\net8.0-windows\UI\Options.g.cs
+c:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\obj\Debug\net8.0-windows\UI\SettingsView.g.cs
+c:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\obj\Debug\net8.0-windows\GeneratedInternalTypeHelper.g.cs
+c:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\obj\Debug\net8.0-windows\NINA.Plugins.Fujifilm_MarkupCompile.cache
+c:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\obj\Debug\net8.0-windows\NINA.Plugins.Fujifilm_MarkupCompile.lref

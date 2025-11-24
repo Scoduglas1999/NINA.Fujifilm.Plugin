@@ -4,7 +4,11 @@ dotnet build "c:\Users\scdou\Documents\NINA.Fujifilm.Plugin\NINA.Plugins.Fujifil
 if ($LASTEXITCODE -ne 0) { Write-Error "Build failed"; exit 1 }
 
 # Find Build Artifacts
-$binPath = "c:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\bin\Release"
+$binPath = "c:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\bin\x64\Release\net8.0-windows"
+if (-not (Test-Path $binPath)) {
+    # Fallback to standard Release if x64 not found
+    $binPath = "c:\Users\scdou\Documents\NINA.Fujifilm.Plugin\src\NINA.Plugins.Fujifilm\bin\Release\net8.0-windows"
+}
 $dll = Get-ChildItem -Path $binPath -Filter "NINA.Plugins.Fujifilm.dll" -Recurse | Select-Object -First 1
 if ($null -eq $dll) { Write-Error "DLL not found"; exit 1 }
 $sourceDir = $dll.DirectoryName

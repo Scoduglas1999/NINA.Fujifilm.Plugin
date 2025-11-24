@@ -86,16 +86,11 @@ public sealed class FujiCameraFactory : IFujiCameraFactory
         // We need to manage lifetimes for the camera and libraw adapter
         // Since this factory is Shared, but the adapter is transient/per-connection
         // We'll use the factory's injected instances but we need to be careful about disposal.
-        // However, the Adapter takes ownership of the camera connection logic.
         
         // In a proper DI setup, we might want to use a child container or factory delegate.
         // For now, we pass the shared instances. The Adapter should NOT dispose the shared _camera instance
         // if it's meant to be reused, but here _camera is NonShared in the container?
         // Wait, FujiCamera is NonShared in its export.
-        // But FujiCameraFactory imports it. If Factory is Shared, then _camera is a singleton within the Factory.
-        // This might be an issue if we want multiple cameras, but usually we connect to one at a time.
-        
-        // Let's check FujiCamera export: [PartCreationPolicy(CreationPolicy.NonShared)]
         // But Factory is [PartCreationPolicy(CreationPolicy.Shared)]
         // So _camera is captured once. This means we can only use one camera instance.
         // That's probably fine for now.
@@ -108,6 +103,7 @@ public sealed class FujiCameraFactory : IFujiCameraFactory
             _diagnostics, 
             _libRaw, 
             _settingsProvider, 
+            _profileService,
             Disposable.Empty, 
             Disposable.Empty);
         
@@ -139,11 +135,22 @@ public sealed class FujiCameraFactory : IFujiCameraFactory
         
         return new FujiCameraCapabilities(
             Array.AsReadOnly(new int[0]), 
-            0, 0, 0, false, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
-            FujiCameraMetadata.Empty, 
-            Array.AsReadOnly(new int[0]), 
-            Array.AsReadOnly(new int[0]), 
-            0, 0);
+            0, 
+            0, 
+            0, 
+            false, 
+            0, 
+            0, 
+            0, 
+            0, 
+            0, 
+            0, 
+            0, 
+            0, 
+            0,
+            FujiCameraMetadata.Empty,
+            0,
+            0);
     }
 
     private class Disposable : IDisposable
