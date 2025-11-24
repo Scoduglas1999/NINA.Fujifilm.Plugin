@@ -13298,3 +13298,6 @@ Scaled 8-bit data to 16-bit.
 [11/23/2025 20:30:07 -05:00] [Adapter] Image stats (sampled): Min=0, Max=16383, Avg=2367.20
 [11/23/2025 20:30:07 -05:00] [Adapter] X-Trans detected with debayered RGB available from LibRaw (non-destructive).
 [11/23/2025 20:30:07 -05:00] [Adapter] Returning Synthetic RGGB data for X-Trans preview (39937536 pixels)
+[11/23/2025 20:37:55 -05:00] [Camera] Closing camera session 2317449947920
+[11/23/2025 20:37:55 -05:00] [Interop] Closing Fujifilm camera ENUM:0
+[11/23/2025 20:37:55 -05:00] [Adapter] Disconnected X-T5

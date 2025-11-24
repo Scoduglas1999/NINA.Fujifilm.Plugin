@@ -12,17 +12,17 @@ Unlock the full potential of your Fujifilm camera in [N.I.N.A. (Nighttime Imagin
 ## 🚀 Key Features
 
 ### 🎨 X-Trans Color Preview (New!)
-*   **Synthetic Bayer Technology**: We've cracked the code on X-Trans live view. The plugin intelligently processes X-Trans data to provide a **Full Color Live Preview** directly in N.I.N.A.
-    *   *No more black & white mosaics.*
-    *   *No more "zoomed in" artifacts.*
-    *   *Just a clean, color image for framing and focus.*
-*   **Non-Destructive**: Your saved images are still the original, bit-perfect `.RAF` files, preserving the full raw sensor data for post-processing.
+*   **Synthetic Bayer Technology**: This plugin implements a novel solution for X-Trans live view. It intelligently processes X-Trans data to provide a **Full Color Live Preview** directly in N.I.N.A.
+    *   *Eliminates black & white mosaics.*
+    *   *Resolves "zoomed in" artifacts.*
+    *   *Provides a clean, color image for framing and focus.*
+*   **Non-Destructive**: Saved images are still the original, bit-perfect `.RAF` files, preserving the full raw sensor data for post-processing.
 
 ### 📸 Native Camera Control
 *   **Direct USB Connection**: Faster and more stable than ASCOM.
 *   **Robust Exposure Control**: Full support for **ISO**, **Shutter Speed**, and **Bulb Mode**.
     *   *Automatically handles the transition to Bulb for exposures > 30s.*
-*   **Smart Metadata**: Automatically writes the correct `BAYERPAT` and `ROWORDER` to FITS headers, ensuring your images stack correctly in PixInsight, Siril, and DeepSkyStacker.
+*   **Smart Metadata**: Automatically writes the correct `BAYERPAT` and `ROWORDER` to FITS headers, ensuring images stack correctly in PixInsight, Siril, and DeepSkyStacker.
 
 ### 🔭 Electronic Lens Focuser
 *   **Turn your Lens into an Autofocuser**: The plugin exposes your attached electronic lens as a **Focuser Device** in N.I.N.A.
